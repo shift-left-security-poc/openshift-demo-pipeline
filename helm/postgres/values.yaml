@@ -1,0 +1,13 @@
+nameOverride: blogapi-postgres
+namespace: devops
+image:
+  repository: registry.redhat.io/rhel9/postgresql-16
+  tag: latest
+storage:
+  size: 1Gi
+credentials:
+  database: blogdb
+  username: blogapi
+  # password is intentionally left blank here; set via --set or a separate
+  # values-secret.yaml (gitignored) when running `helm install`/`upgrade`.
+  password: ""
