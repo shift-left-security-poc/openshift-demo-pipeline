@@ -20,6 +20,15 @@ builder.Services.AddDbContext<BlogDbContext>(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<BlogDbContext>();
+    if (!string.IsNullOrEmpty(app.Configuration.GetConnectionString("BlogDb")))
+    {
+        db.Database.Migrate();
+    }
+}
+
 app.UseWhen(
     context => context.Request.Path.StartsWithSegments("/api/posts"),
     appBuilder => appBuilder.UseMiddleware<ApiKeyMiddleware>());
