@@ -5,6 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+const string CorsPolicyName = "BlogApiCors";
+var allowedOrigins = Array.Empty<string>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicyName, policy =>
+    {
+        policy.SetIsOriginAllowed(origin => allowedOrigins.Contains(origin))
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddDbContext<BlogDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("BlogDb");
@@ -20,6 +33,8 @@ builder.Services.AddDbContext<BlogDbContext>(options =>
 
 var app = builder.Build();
 
+allowedOrigins = app.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<BlogDbContext>();
@@ -28,6 +43,8 @@ using (var scope = app.Services.CreateScope())
         db.Database.Migrate();
     }
 }
+
+app.UseCors(CorsPolicyName);
 
 app.UseWhen(
     context => context.Request.Path.StartsWithSegments("/api/posts"),

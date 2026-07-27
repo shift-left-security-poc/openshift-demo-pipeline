@@ -146,3 +146,97 @@ a:hover {
   color: #484f58;
   border-top: 1px solid #21262d;
 }
+
+/* Nav */
+.App-nav {
+  margin-top: 1rem;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid #4b9c08;
+  border-radius: 6px;
+  color: #4b9c08;
+  font-weight: 600;
+}
+.nav-link:hover {
+  background: #4b9c08;
+  color: #0d0f14;
+  text-decoration: none;
+}
+
+/* Blog form */
+.blog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.blog-form label {
+  font-size: 0.85rem;
+  color: #8b949e;
+  margin-top: 0.75rem;
+}
+
+.blog-form input,
+.blog-form textarea {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  color: #c9d1d9;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.blog-form button {
+  margin-top: 1.25rem;
+  align-self: flex-start;
+  background: #4b9c08;
+  color: #0d0f14;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.blog-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.blog-error {
+  margin-top: 1rem;
+  color: #f85149;
+}
+
+.blog-success {
+  margin-top: 1rem;
+  color: #4b9c08;
+}
+
+/* Blog post list */
+.blog-post-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.blog-post-card {
+  border: 1px solid #21262d;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.blog-post-card h3 {
+  color: #4b9c08;
+}
+
+.blog-post-meta {
+  font-size: 0.8rem;
+  color: #8b949e;
+  margin: 0.35rem 0 0.6rem;
+}

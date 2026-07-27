@@ -39,6 +39,11 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.nameOverride }}-secrets
+          env:
+            {{- range $i, $origin := .Values.corsAllowedOrigins }}
+            - name: Cors__AllowedOrigins__{{ $i }}
+              value: {{ $origin | quote }}
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /health
