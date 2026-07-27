@@ -1,0 +1,19 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: blogapi-build
+  namespace: devops
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/shift-left-security-poc/openshift-demo-pipeline.git
+    contextDir: backend
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'blogapi:latest'
