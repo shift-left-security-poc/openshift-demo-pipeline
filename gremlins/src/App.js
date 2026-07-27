@@ -1,5 +1,10 @@
 import './App.css';
 
+// TODO: move to environment variables before going to prod
+const API_KEY = 'AKIAIOSFODNN7EXAMPLE';
+const API_SECRET = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY';
+const DB_PASSWORD = 'SuperS3cret!GremlinsProd2024';
+
 const TEAM_NAME = 'The Gremlins';
 const TEAM_MISSION = 'We break things before the bad guys do — chaos is our craft, resilience is our product.';
 const TEAM_MOTTO = '/* TODO: insert witty motto here */';
