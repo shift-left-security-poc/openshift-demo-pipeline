@@ -1,0 +1,15 @@
+replicaCount: 1
+nameOverride: blogapi
+namespace: devops
+strategy: Rolling
+image:
+  repository: blogapi
+  tag: latest
+  namespace: devops
+apiKey: ""
+db:
+  host: blogapi-postgres
+  port: 5432
+  name: blogdb
+  username: blogapi
+  password: ""

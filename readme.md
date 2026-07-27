@@ -60,3 +60,55 @@ view the installed helm charts
 helm list
 ```
 
+## Deploying the BlogApi backend + PostgreSQL
+
+1. Apply the ImageStream and BuildConfig, then start a build:
+
+   ```bash
+   oc project devops
+   oc apply -f openshift/blogapi-imagestream.yaml
+   oc apply -f openshift/blogapi-BC-docker.yaml
+   oc start-build blogapi-build --follow
+   ```
+
+2. Install PostgreSQL (set a real password; do not commit it):
+
+   ```bash
+   helm install blogapi-postgres ./helm/postgres/ \
+     --set credentials.password=<choose-a-strong-password>
+   ```
+
+   A `registry.redhat.io` pull secret must already exist in the `devops` namespace or the PostgreSQL image pull will fail. If it doesn't exist yet, create it and link it to the `default` service account:
+
+   ```bash
+   oc create secret docker-registry redhat-registry-pull-secret \
+     --docker-server=registry.redhat.io \
+     --docker-username=<your-redhat-username> \
+     --docker-password=<your-redhat-password> \
+     -n devops
+   oc secrets link default redhat-registry-pull-secret --for=pull -n devops
+   ```
+
+3. Install BlogApi (choose a strong API key, and use the exact same PostgreSQL password from step 2):
+
+   ```bash
+   helm install blogapi ./helm/blogapi/ \
+     --set apiKey=<choose-a-strong-api-key> \
+     --set db.password=<same-password-as-step-2>
+   ```
+
+4. Verify:
+
+   ```bash
+   oc get route blogapi
+   curl https://<route-host>/health
+   curl -H "X-API-Key: <api-key>" https://<route-host>/api/posts
+   ```
+
+### ⚠️ Important: Password consistency
+
+PostgreSQL only reads the chart-provided password from environment variables during the first `initdb`, when the PVC is brand new. That first `helm install blogapi-postgres ... --set credentials.password=...` value becomes the real database password for the lifetime of that PVC.
+
+On later `helm upgrade` runs, the postgres chart Secret is regenerated from the new `credentials.password` value, but the running database password stored on disk is not changed automatically. In practice, `helm/blogapi` must always be installed or upgraded with `--set db.password=<the-original-postgres-password>` so the app matches the actual password inside PostgreSQL, even if the current Secret shows something else.
+
+If you truly need to rotate the password, change it inside the running database with `psql` / `ALTER USER ... PASSWORD` inside the running Postgres pod, or delete and recreate the PVC (which also deletes all data). Do not rely on `helm upgrade --set credentials.password=...` alone to rotate the real PostgreSQL password.

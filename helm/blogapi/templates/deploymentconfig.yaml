@@ -1,0 +1,54 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: {{ .Values.nameOverride }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.nameOverride }}
+spec:
+  strategy:
+    type: {{ .Values.strategy }}
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - {{ .Values.nameOverride }}
+        from:
+          kind: ImageStreamTag
+          namespace: {{ .Values.image.namespace }}
+          name: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+    - type: ConfigChange
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    app: {{ .Values.nameOverride }}
+    deploymentconfig: {{ .Values.nameOverride }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.nameOverride }}
+        deploymentconfig: {{ .Values.nameOverride }}
+    spec:
+      containers:
+        - name: {{ .Values.nameOverride }}
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/{{ .Values.image.namespace }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ .Values.nameOverride }}-secrets
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 12
