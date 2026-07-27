@@ -112,3 +112,21 @@ PostgreSQL only reads the chart-provided password from environment variables dur
 On later `helm upgrade` runs, the postgres chart Secret is regenerated from the new `credentials.password` value, but the running database password stored on disk is not changed automatically. In practice, `helm/blogapi` must always be installed or upgraded with `--set db.password=<the-original-postgres-password>` so the app matches the actual password inside PostgreSQL, even if the current Secret shows something else.
 
 If you truly need to rotate the password, change it inside the running database with `psql` / `ALTER USER ... PASSWORD` inside the running Postgres pod, or delete and recreate the PVC (which also deletes all data). Do not rely on `helm upgrade --set credentials.password=...` alone to rotate the real PostgreSQL password.
+
+## BlogApi Jenkins pipeline (CI build)
+
+Mirroring the `gremlins-pipeline` JenkinsPipeline BuildConfig, `blogapi-pipeline` runs `dotnet test` against the backend before triggering the actual container image build, giving a shift-left test gate ahead of the Docker-strategy build already configured in `openshift/blogapi-BC-docker.yaml`.
+
+1. Apply the Jenkins pipeline BuildConfig (Jenkins must already be installed in the namespace, see step 1 above):
+
+   ```bash
+   oc apply -f openshift/BC-jenkins-blogapi.yaml
+   ```
+
+2. Start the pipeline:
+
+   ```bash
+   oc start-build blogapi-pipeline --follow
+   ```
+
+This checks out the repo, runs `dotnet test backend/BlogApi.sln` inside a `mcr.microsoft.com/dotnet/sdk:10.0` agent pod, and — if tests pass — triggers `blogapi-build` (the Docker-strategy BuildConfig that produces the `blogapi:latest` image consumed by the `helm/blogapi` DeploymentConfig).

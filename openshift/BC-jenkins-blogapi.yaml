@@ -1,0 +1,13 @@
+kind: "BuildConfig"
+apiVersion: "build.openshift.io/v1"
+metadata:
+  name: "blogapi-pipeline"
+  namespace: "devops"
+spec:
+  source:
+    git:
+      uri: "https://github.com/shift-left-security-poc/openshift-demo-pipeline.git"
+      ref: "master"
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: jenkins/Jenkinsfile.blogapi

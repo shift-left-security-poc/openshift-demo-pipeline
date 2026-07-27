@@ -1,0 +1,54 @@
+library identifier: "pipeline-library@master", retriever: modernSCM(
+  [$class: "GitSCMSource",
+   remote: "https://github.com/redhat-cop/pipeline-library.git"])
+
+pipeline {
+    agent none
+    stages {
+        stage("Checkout code") {
+            agent { label "nodejs" }
+            steps {
+                git 'https://github.com/shift-left-security-poc/openshift-demo-pipeline.git'
+                stash name: "source", includes: "backend/**"
+            }
+        }
+        stage("Run backend tests") {
+            agent {
+                kubernetes {
+                    yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: dotnet
+      image: mcr.microsoft.com/dotnet/sdk:10.0
+      command: ["cat"]
+      tty: true
+'''
+                }
+            }
+            steps {
+                unstash "source"
+                container("dotnet") {
+                    sh '''
+                    cd backend
+                    dotnet test BlogApi.sln
+                    '''
+                }
+            }
+        }
+        stage("Build BlogApi image") {
+            agent { label "nodejs" }
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject("devops") {
+                            def build = openshift.startBuild("blogapi-build")
+                            build.logs("-f")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
