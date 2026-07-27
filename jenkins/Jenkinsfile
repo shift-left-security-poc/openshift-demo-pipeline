@@ -9,7 +9,7 @@ pipeline{
     stages{
         stage("Checkout code"){
             steps{
-                git 'https://github.com/adynetro/openshift-demo-pipeline.git'
+                git 'https://github.com/shift-left-security-poc/openshift-demo-pipeline.git'
             }
         }
         stage("Build code"){
