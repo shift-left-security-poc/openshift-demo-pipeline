@@ -78,7 +78,16 @@ helm list
      --set credentials.password=<choose-a-strong-password>
    ```
 
-   A `registry.redhat.io` pull secret must already exist in the `devops` namespace or the PostgreSQL image pull will fail. Create or link the namespace secret before installing the chart.
+   A `registry.redhat.io` pull secret must already exist in the `devops` namespace or the PostgreSQL image pull will fail. If it doesn't exist yet, create it and link it to the `default` service account:
+
+   ```bash
+   oc create secret docker-registry redhat-registry-pull-secret \
+     --docker-server=registry.redhat.io \
+     --docker-username=<your-redhat-username> \
+     --docker-password=<your-redhat-password> \
+     -n devops
+   oc secrets link default redhat-registry-pull-secret --for=pull -n devops
+   ```
 
 3. Install BlogApi (choose a strong API key, and use the exact same PostgreSQL password from step 2):
 
