@@ -34,5 +34,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "overrides": {
+    "@babel/traverse@<=7.23.2": "7.23.2",
+    "webpack-dev-server@<=5.2.1": "5.2.1"
   }
 }

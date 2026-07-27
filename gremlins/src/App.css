@@ -1,47 +1,148 @@
-a:link {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0d0f14;
+  color: #c9d1d9;
+}
+
+a {
+  color: #58a6ff;
   text-decoration: none;
 }
-a:link:hover {
-  background-color: rgb(70, 66, 66);
+a:hover {
+  text-decoration: underline;
 }
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  min-height: 100vh;
 }
 
-.App-link {
+/* Hero */
+.App-hero {
+  background: linear-gradient(135deg, #161b22 0%, #1a2a1a 100%);
+  padding: 3rem 1rem 2.5rem;
+  text-align: center;
+  border-bottom: 2px solid #4b9c08;
+}
+
+.gremlin-icon {
+  font-size: 5rem;
+  margin-bottom: 0.5rem;
+}
+
+.team-name {
+  font-size: 2.8rem;
   color: #4b9c08;
-  font-weight: bold;
-  font-style: normal;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-  
+.team-motto {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  color: #8b949e;
+  font-style: italic;
+}
+
+/* Main content */
+.App-main {
+  flex: 1;
+  max-width: 900px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.section {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 1.75rem 2rem;
+}
+
+.section h2 {
+  font-size: 1.4rem;
+  color: #4b9c08;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #21262d;
+  padding-bottom: 0.5rem;
+}
+
+/* Mission */
+.mission-text {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #c9d1d9;
+}
+
+/* Members grid */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.member-card {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.member-card:hover {
+  border-color: #4b9c08;
+}
+
+.member-avatar {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.member-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #e6edf3;
+  margin-bottom: 0.3rem;
+}
+
+.member-role {
+  font-size: 0.8rem;
+  color: #8b949e;
+}
+
+/* Contact */
+.contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 1rem;
+}
+
+.contact-list code {
+  background: #0d1117;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  color: #79c0ff;
+  font-size: 0.95rem;
+}
+
+/* Footer */
+.App-footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: #484f58;
+  border-top: 1px solid #21262d;
 }
