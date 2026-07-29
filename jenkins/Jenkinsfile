@@ -26,7 +26,8 @@ pipeline{
             steps{
                 sh '''
                 cd gremlins
-                npm ci
+                export NODE_OPTIONS=--openssl-legacy-provider
+                npm install
                 npm run-script build
                 '''
             }
