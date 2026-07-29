@@ -26,9 +26,8 @@ pipeline{
             steps{
                 sh '''
                 cd gremlins
-                export NODE_OPTIONS=--openssl-legacy-provider
                 npm install
-                npm run-script build
+                node --openssl-legacy-provider ./node_modules/react-scripts/bin/react-scripts.js build
                 '''
             }
         }
