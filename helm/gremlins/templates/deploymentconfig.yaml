@@ -1,3 +1,4 @@
+# checkov:skip=CKV_K8S_14: Image is built from source code using OpenShift S2I (nginx) after React/Node build, not a third-party image
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
