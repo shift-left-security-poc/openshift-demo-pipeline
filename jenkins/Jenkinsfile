@@ -27,7 +27,7 @@ pipeline{
                 sh '''
                 cd gremlins
                 npm ci
-                node --openssl-legacy-provider ./node_modules/react-scripts/bin/react-scripts.js build
+                npm run build
                 '''
             }
         }
