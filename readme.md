@@ -130,3 +130,5 @@ Mirroring the `gremlins-pipeline` JenkinsPipeline BuildConfig, `blogapi-pipeline
    ```
 
 This checks out the repo, runs `dotnet test backend/BlogApi.sln` inside a `mcr.microsoft.com/dotnet/sdk:10.0` agent pod, and — if tests pass — triggers `blogapi-build` (the Docker-strategy BuildConfig that produces the `blogapi:latest` image consumed by the `helm/blogapi` DeploymentConfig).
+
+api-key=dasdkjsahdksajhd
