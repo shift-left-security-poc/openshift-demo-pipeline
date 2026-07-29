@@ -17,6 +17,8 @@ spec:
       labels:
         app: {{ .Values.nameOverride }}
     spec:
+      securityContext:
+        runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
       containers:
         - name: postgres
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
