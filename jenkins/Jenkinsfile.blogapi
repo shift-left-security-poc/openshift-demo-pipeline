@@ -3,51 +3,31 @@ library identifier: "pipeline-library@master", retriever: modernSCM(
    remote: "https://github.com/redhat-cop/pipeline-library.git"])
 
 pipeline {
-    agent none
+    agent {
+        label "dotnet"
+    }
     stages {
         stage("Checkout code") {
-            agent { label "nodejs" }
             steps {
                 git 'https://github.com/shift-left-security-poc/openshift-demo-pipeline.git'
-                stash name: "source", includes: "backend/**"
             }
         }
-        stage("Run backend tests") {
-            agent {
-                kubernetes {
-                    yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: dotnet
-      image: mcr.microsoft.com/dotnet/sdk:10.0
-      command: ["cat"]
-      tty: true
-'''
-                }
-            }
+        stage("Aikido security scan") {
             steps {
-                unstash "source"
-                container("dotnet") {
+                withCredentials([string(credentialsId: 'aikido-ci-api-key', variable: 'AIKIDO_API_KEY')]) {
                     sh '''
-                    cd backend
-                    dotnet test BlogApi.sln
+                    COMMIT_SHA=$(git rev-parse HEAD)
+                    npx -y @aikidosec/ci-api-client scan-release openshift-demo-pipeline "$COMMIT_SHA" --apikey "$AIKIDO_API_KEY"
                     '''
                 }
             }
         }
-        stage("Build BlogApi image") {
-            agent { label "nodejs" }
+        stage("Build BlogApi") {
             steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject("devops") {
-                            def build = openshift.startBuild("blogapi-build")
-                            build.logs("-f")
-                        }
-                    }
-                }
+                sh '''
+                cd backend
+                dotnet build BlogApi.sln --configuration Release
+                '''
             }
         }
     }
