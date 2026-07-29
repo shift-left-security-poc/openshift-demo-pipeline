@@ -12,6 +12,16 @@ pipeline{
                 git 'https://github.com/shift-left-security-poc/openshift-demo-pipeline.git'
             }
         }
+        stage("Aikido security scan"){
+            steps{
+                withCredentials([string(credentialsId: 'aikido-ci-api-key', variable: 'AIKIDO_API_KEY')]) {
+                    sh '''
+                    COMMIT_SHA=$(git rev-parse HEAD)
+                    npx -y @aikidosec/ci-api-client scan-release shift-left-security-poc/openshift-demo-pipeline "$COMMIT_SHA" --apikey "$AIKIDO_API_KEY"
+                    '''
+                }
+            }
+        }
         stage("Build code"){
             steps{
                 sh '''
