@@ -11,3 +11,5 @@ credentials:
   # password is intentionally left blank here; set via --set or a separate
   # values-secret.yaml (gitignored) when running `helm install`/`upgrade`.
   password: ""
+securityContext:
+  runAsNonRoot: true
