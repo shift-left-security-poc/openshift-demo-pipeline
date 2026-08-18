@@ -10,4 +10,6 @@ WORKDIR /app
 COPY --from=build /app/publish .
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
+RUN chown -R 1000:1000 /app
+USER 1000
 ENTRYPOINT ["dotnet", "BlogApi.dll"]
